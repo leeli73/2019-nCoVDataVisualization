@@ -7,7 +7,7 @@
 
 主要使用了Antx L7，Echarts，Vue，jQuery等技术(本人也只是一个小菜鸡，只是响应国家号召，在家学习制作了本平台)
 
-![demo](mdeia/demo.jpg)
+![demo](https://raw.githubusercontent.com/leeli73/2019-nCoVDataVisualization/master/media/demo.jpg)
 
 ##2019-nCoV Data Visualization有哪些功能？
 
