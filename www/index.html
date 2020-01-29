@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>疫情可视化</title>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+  <script type="text/javascript" language="javascript">
+    function changeFrameHeight() {
+      var ifm = document.getElementById("myiframe");
+      ifm.height = document.documentElement.clientHeight;
+    }
+    window.onresize = function () { changeFrameHeight(); }
+    $(function () { changeFrameHeight(); });
+  </script>
+  <style>
+    .main {
+      width: 100%;
+      margin: auto;
+      position: relative
+    }
+
+    .info {
+      width: 30%;
+      height: 100%;
+      background-color: #C0C0C0;
+      position: absolute;
+      float: right;
+      filter: alpha(Opacity=80);
+      -moz-opacity: 0.5;
+      opacity: 0.5;
+      border-radius: 30px;
+    }
+
+    .header {
+      width: 100%;
+      height: 5%;
+      position: absolute;
+      float: right;
+      filter: alpha(Opacity=90);
+      -moz-opacity: 0.8;
+      opacity: 0.8;
+      top: 0;
+      left: 0;
+      background-color: #C0C0C0;
+    }
+
+    .city {
+      width: 15%;
+      height: 95%;
+      position: absolute;
+      float: right;
+      filter: alpha(Opacity=90);
+      -moz-opacity: 0.8;
+      opacity: 0.8;
+      border-radius: 30px;
+    }
+  </style>
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+
+<body style="margin:0px;padding:0px;overflow:hidden">
+  <div class="main">
+    <header class="header">
+      <h3>肺炎疫情可视化平台</h3>
+    </header>
+    <div class="city" id="city">
+      <div class="xpanelcity-wrapper xpanelcity-wrapper-1-3">
+        <div class="xpanelcity">
+          <div class="fillinfo-h">
+            <iframe src="/city.html" frameborder="0" scrolling="no" width="100%" height="100%"
+              allowTransparency="true"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 fill-h" style="position: absolute; float:right; width: 35%; margin:0 auto;" id="info">
+      <div class="xpanel-wrapper xpanel-wrapper-1">
+        <div class="xpanel">
+          <div class="fill-h">
+            <div style="height: 20%;">
+              <!----疫情统计---->
+              <div class="chart-wrapper">
+                <h3 class="chart-title">疫情数据统计</h3>
+                <div class="chart-div chart-done">
+                  <table class="data-t">
+                    <tr></tr>
+                    <tr>
+                      <th><img src="img/quezhen.png" /></th>
+                      <td>
+                        <p><span id="confirmedCount">6014</span></p>
+                        <p>确诊患者数</p>
+                      </td>
+                      <th><img src="img/yisi.png" /></th>
+                      <td>
+                        <p><span id="suspectedCount">9239</span></p>
+                        <p>疑似患者数</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th><img src="img/zhiyu.png" /></th>
+                      <td>
+                        <p><span id="curedCount">109</span></p>
+                        <p>治愈患者数</p>
+                      </td>
+                      <th><img src="img/siwang.png" /></th>
+                      <td>
+                        <p><span id="deadCount">132</span></p>
+                        <p>死亡患者数</p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
+              <!----实时动态---->
+              <div class="chart-wrapper">
+                <h3 class="chart-title">疫情动态</h3>
+                <div class="xpanelinfo-wrapper xpanelinfo-wrapper-1-3">
+                  <div class="xpanelinfo" id="nowinfo">
+                    <div class="fillinfo-h">
+                      <iframe src="/dongtai.html" frameborder="0" scrolling="no" width="100%" height="100%"
+                        allowTransparency="true"></iframe>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <iframe name="myiframe" id="myiframe" src="/zhuzhuangtu.html" frameborder="0" scrolling="no" width="100%"
+      height="100%"></iframe>
+  </div>
+</body>
+<script src="js/axios.min.js"></script>
+<script>
+  $('#info').css('top', $(window).height() * 0.05)
+  $('#info').css('left', $(window).width() * 0.65)
+  $('#nowinfo').css('min-height', $(window).width() * 0.328)
+  $('#city').css('top', $(window).height() * 0.05)
+  $('#city').css('left', $(window).width() * 0.01)
+  update()
+  setInterval(function () {
+    update()
+  }, 3000)
+  function update() {
+    axios.get('/api?type=getAllCount')
+      .then(function (data) {
+        console.log("update count.")
+        $('#confirmedCount').html(data.data.confirmedCount)
+        $('#suspectedCount').html(data.data.suspectedCount)
+        $('#curedCount').html(data.data.curedCount)
+        $('#deadCount').html(data.data.deadCount)
+      })
+      .catch(function (error) { // 请求失败处理
+        console.log(error);
+      });
+  }
+</script>
+
+</html>

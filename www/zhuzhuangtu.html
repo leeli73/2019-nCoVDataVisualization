@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>疫情分布-3D柱状图</title>
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            margin: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+    <script src="js/l7.js"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        const scene = new L7.Scene({
+            id: 'map',
+            map: new L7.GaodeMap({
+                pitch: 35.210526315789465,
+                style: 'dark',
+                center: [115.291118, 34.510668],
+                zoom: 4.03
+            })
+        });
+        fetch('data/city.json')
+            .then(res => res.json())
+            .then(data => {
+                const pointLayer = new L7.PointLayer({})
+                    .source(data.list, {
+                        parser: {
+                            type: 'json',
+                            x: 'x',
+                            y: 'y'
+                        }
+                    })
+                    .shape('cylinder')
+                    .size('confirmedCount', function (level) {
+                        return [5, 5, level*1.2];
+                    })
+                    .active(true)
+                    .color('confirmedCount', [
+                        '#CEF8D6',
+                        '#A1EDB8',
+                        '#7BE39E',
+                        '#5FD3A6',
+                        '#4AC5AF',
+                        '#34B6B7',
+                        '#289899',
+                        '#1D7F7E',
+                        '#146968',
+                        '#094D4A'
+                    ])
+                    .style({
+                        opacity: 5.0
+                    });
+                scene.addLayer(pointLayer);
+            });
+    </script>
+</body>
+
+</html>
